@@ -2525,7 +2525,7 @@ public class MovingListener extends CheckListener implements TickListener, IRemo
         final Location loc = player.getLocation(useLoc);
         // Debug logout.
         if (pData.isDebugActive(checkType)) StaticLog.logInfo("Player " + player.getName() + " leaves at location: " + loc.toString());
-
+/*
         if (!player.isSleeping() && !player.isDead()) {
             // Check for missed moves.
             // TODO: Force-load chunks [log if (!)] ?
@@ -2575,7 +2575,7 @@ public class MovingListener extends CheckListener implements TickListener, IRemo
                     }
                 }
             }
-        }
+        }*/
         useLoc.setWorld(null);
         // Adjust data.
         survivalFly.setReallySneaking(player, false);
