@@ -215,9 +215,9 @@ public class ChatListener extends CheckListener implements INotifyReload, JoinLe
                 // Note that this checks for prefixes, not prefix words.
                 final MovingConfig mcc = pData.getGenericInstance(MovingConfig.class);
                 if (mcc.passableUntrackedCommandCheck && mcc.passableUntrackedCommandPrefixes.hasAnyPrefix(messageVars)) {
-                    if (checkUntrackedLocation(player, message, mcc, pData)) {
-                        event.setCancelled(true);
-                    }
+//                    if (checkUntrackedLocation(player, message, mcc, pData)) {
+//                        event.setCancelled(true);
+//                    }
                 }
             }
         }
