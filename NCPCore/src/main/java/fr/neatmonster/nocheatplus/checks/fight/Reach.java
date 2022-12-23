@@ -81,6 +81,7 @@ public class Reach extends Check {
                          final Entity damaged, final boolean damagedIsFake, final Location dRef, 
                          final FightData data, final FightConfig cc, final IPlayerData pData) {
 
+        if (!me.endcrystal.pvpswitch.TimerSystem.isSwitchActive(player)) return false; // Disable on PVP switch
         boolean cancel = false;
         // The maximum distance allowed to interact with an entity in survival mode.
         final double SURVIVAL_DISTANCE = cc.reachSurvivalDistance; 

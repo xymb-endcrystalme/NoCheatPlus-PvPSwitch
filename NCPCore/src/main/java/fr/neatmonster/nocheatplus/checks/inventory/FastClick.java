@@ -74,6 +74,7 @@ public class FastClick extends Check {
                          final String inventoryAction, final InventoryData data, final InventoryConfig cc, 
                          final IPlayerData pData) {
 
+        if (!me.endcrystal.pvpswitch.TimerSystem.isSwitchActive(player)) return false; // Disable on PVP switch
         final float amount;
         final Material clickedMat = clicked == null ? Material.AIR : clicked.getType();
         final Material cursorMat;

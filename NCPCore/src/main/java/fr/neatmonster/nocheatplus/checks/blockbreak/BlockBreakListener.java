@@ -128,6 +128,10 @@ public class BlockBreakListener extends CheckListener {
      */
     @EventHandler(ignoreCancelled = false, priority = EventPriority.LOWEST)
     public void onBlockBreak(final BlockBreakEvent event) {
+        if (!me.endcrystal.pvpswitch.TimerSystem.isSwitchActive(event.getPlayer())) {
+            event.setCancelled(false);
+            return; // Disable on PVP switch
+        }
         final long now = System.currentTimeMillis();
         final Player player = event.getPlayer();
         final IPlayerData pData = DataManager.getPlayerData(player);

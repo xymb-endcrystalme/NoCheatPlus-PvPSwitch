@@ -144,6 +144,10 @@ public class BlockInteractListener extends CheckListener {
     @EventHandler(ignoreCancelled = false, priority = EventPriority.LOWEST)
     public void onPlayerInteract(final PlayerInteractEvent event) {
         final Player player = event.getPlayer();
+        if (!me.endcrystal.pvpswitch.TimerSystem.isSwitchActive(event.getPlayer())) {
+            event.setCancelled(false);
+            return; // Disable on PVP switch
+        }
         final IPlayerData pData = DataManager.getPlayerData(player);
         final BlockInteractData data = pData.getGenericInstance(BlockInteractData.class);
 

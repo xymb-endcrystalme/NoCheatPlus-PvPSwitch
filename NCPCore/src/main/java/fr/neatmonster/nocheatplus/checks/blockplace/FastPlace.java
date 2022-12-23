@@ -48,6 +48,7 @@ public class FastPlace extends Check {
             final BlockPlaceData data, final BlockPlaceConfig cc, 
             final IPlayerData pData) {
 
+        if (!me.endcrystal.pvpswitch.TimerSystem.isSwitchActive(player)) return false; // Disable on PVP switch
         data.fastPlaceBuckets.add(System.currentTimeMillis(), 1f);
         final boolean lag = pData.getCurrentWorldData().shouldAdjustToLag(type);
 

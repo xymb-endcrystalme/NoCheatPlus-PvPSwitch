@@ -29,6 +29,7 @@ import fr.neatmonster.nocheatplus.permissions.Permissions;
 import fr.neatmonster.nocheatplus.players.IPlayerData;
 import fr.neatmonster.nocheatplus.utilities.map.BlockProperties;
 
+import static me.endcrystal.pvpswitch.TimerSystem.isSwitchActive;
 
 /**
  * Check if the placing is legitimate in terms of surrounding materials.
@@ -62,7 +63,7 @@ public class Against extends Check {
     public boolean check(final Player player, final Block block, final Material placedMat, 
                          final Block blockAgainst, final boolean isInteractBlock, 
                          final BlockPlaceData data, final BlockPlaceConfig cc, final IPlayerData pData) {
-        
+        if (true) return false; // It's just broken, don't use it
         boolean violation = false;
         /*
          * TODO: Make more precise (workarounds like BridgeMisc.LILY_PAD,

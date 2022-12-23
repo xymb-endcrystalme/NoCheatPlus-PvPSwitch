@@ -59,6 +59,7 @@ public class FastBreak extends Check {
      */
     public boolean check(final Player player, final Block block, final AlmostBoolean isInstaBreak, 
             final BlockBreakConfig cc, final BlockBreakData data, final IPlayerData pData) {
+        if (!me.endcrystal.pvpswitch.TimerSystem.isSwitchActive(player)) return false; // Disable on PVP switch
         final long now = System.currentTimeMillis();
         boolean cancel = false;
 

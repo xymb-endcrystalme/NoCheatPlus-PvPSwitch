@@ -52,6 +52,7 @@ public class Direction extends Check {
             final Entity damaged, final boolean damagedIsFake, final Location dLoc, 
             final FightData data, final FightConfig cc) {
         boolean cancel = false;
+        if (!me.endcrystal.pvpswitch.TimerSystem.isSwitchActive(player)) return false; // Disable on PVP switch
 
         final MCAccess mcAccess = this.mcAccess.getHandle();
 

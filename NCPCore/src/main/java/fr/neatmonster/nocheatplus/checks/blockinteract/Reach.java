@@ -55,6 +55,7 @@ public class Reach extends Check {
     public boolean check(final Player player, final Location loc, final double eyeHeight, final Block block, 
             final BlockInteractData data, final BlockInteractConfig cc) {
 
+        if (!me.endcrystal.pvpswitch.TimerSystem.isSwitchActive(player)) return false; // Disable on PVP switch
         boolean cancel = false;
 
         final double distanceLimit = player.getGameMode() == GameMode.CREATIVE ? CREATIVE_DISTANCE : SURVIVAL_DISTANCE;

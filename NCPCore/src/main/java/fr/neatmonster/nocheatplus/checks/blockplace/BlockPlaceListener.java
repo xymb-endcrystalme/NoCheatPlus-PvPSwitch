@@ -169,6 +169,10 @@ public class BlockPlaceListener extends CheckListener {
      */
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onBlockPlace(final BlockPlaceEvent event) {
+        if (!me.endcrystal.pvpswitch.TimerSystem.isSwitchActive(event.getPlayer())) {
+            event.setCancelled(false);
+            return; // Disable on PVP switch
+        }
 
         if (!DataManager.getPlayerData(event.getPlayer()).isCheckActive(CheckType.BLOCKPLACE, event.getPlayer())) return;
 
