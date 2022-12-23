@@ -144,7 +144,7 @@ public class BlockInteractListener extends CheckListener {
     @EventHandler(ignoreCancelled = false, priority = EventPriority.LOWEST)
     public void onPlayerInteract(final PlayerInteractEvent event) {
         final Player player = event.getPlayer();
-        if (!me.endcrystal.pvpswitch.TimerSystem.isSwitchActive(event.getPlayer())) {
+        if (!event.getPlayer().isGliding() && !me.endcrystal.pvpswitch.TimerSystem.isSwitchActive(event.getPlayer())) {
             event.setCancelled(false);
             return; // Disable on PVP switch
         }
@@ -377,7 +377,7 @@ public class BlockInteractListener extends CheckListener {
         //            debug(player, "BlockInteractResolution: cancelled=" + event.isCancelled() 
         //            + " action=" + event.getAction() + " block=" + block + " item=" + Bridge1_9.getUsedItem(player, event));
         //        }
-        if (
+        if (/*
                 (
                         event.getAction() == Action.RIGHT_CLICK_AIR 
                         // Water doesn't happen, block typically is null.
@@ -385,7 +385,7 @@ public class BlockInteractListener extends CheckListener {
                         //                        && block != null && BlockProperties.isLiquid(block.getType())
                         // TODO: web ?
                         )
-                && event.isCancelled() && event.useItemInHand() != Result.DENY) {
+                && event.isCancelled() && event.useItemInHand() != Result.DENY*/ true) {
             final ItemStack stack = Bridge1_9.getUsedItem(player, event);
             if (stack != null && BridgeMisc.maybeElytraBoost(player, stack.getType())) {
                 final int power = BridgeMisc.getFireworksPower(stack);
