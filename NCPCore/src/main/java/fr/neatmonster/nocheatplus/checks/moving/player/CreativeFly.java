@@ -131,7 +131,8 @@ public class CreativeFly extends Check {
         // HACK: when switching model, we need to add some velocity to harmonize the transition and not trggering fps.
         workaroundSwitchingModel(player, thisMove, lastMove, model, data, cc, debug);
 
-
+        if (data.howLongBeenFlying < 2)
+            data.fireworksBoostDuration = Math.max(1, data.fireworksBoostDuration);
 
 
 
@@ -315,6 +316,11 @@ public class CreativeFly extends Check {
                 }
             }
             data.sfJumpPhase = 0;
+
+            // Do not close elytra on setback - Endcrystal.me
+            if (setBack.getPitch() <= 0)
+                setBack.setPitch(5);
+
             return setBack;
         }
         else {
@@ -501,7 +507,15 @@ public class CreativeFly extends Check {
         // Set the vertical limit.
         double limitV = model.getVerticalAscendModSpeed() / 100.0 * ModelFlying.VERTICAL_ASCEND_SPEED; 
         double resultV = 0.0;
-        
+
+        if (data.fireworksBoostDuration > 0) {
+            thisMove.yAllowedDistance = 5;
+            thisMove.hAllowedDistance = 5;
+            if(yDistance > 3) // Top vertical speed in vanilla
+                return new double[] {limitV, 1};
+            return new double[] {limitV, 0};
+        }
+
         // Let fly speed apply with moving upwards.
         if (model.getApplyModifiers() && flying && yDistance > 0.0) {
             limitV *= data.flySpeed / Magic.DEFAULT_FLYSPEED;
@@ -695,29 +709,11 @@ public class CreativeFly extends Check {
             // Fireworks
             // Can't be more precise due to some problems, still have ~10% faster bypasses :(
             if (data.fireworksBoostDuration > 0) {
-                // Handled somewhere else
-                // TODO: More strict vertical check
-                thisMove.yAllowedDistance = allowedElytraYDistance = yDistance;
-                if (Math.round(data.fireworksBoostTickNeedCheck / 4) > data.fireworksBoostDuration
-                    && hDistance < Math.sqrt(x*x + z*z)) {
-                    thisMove.hAllowedDistance = Math.sqrt(x*x + z*z);
-                    if (debug) debug(player, "Set hAllowedDistance for this firework boost phase (hDist/Allowed): " + thisMove.hDistance + "/" + thisMove.hAllowedDistance);
-                    return new double[] {0.0, 0.0};
-                }
-                x *= 0.99;
-                z *= 0.99;
-                x += lookvec.getX() * 0.1D + (lookvec.getX() * 1.5D - x) * 0.5D;
-                z += lookvec.getZ() * 0.1D + (lookvec.getZ() * 1.5D - z) * 0.5D;
-                tags.add("fw_speed");
-                /* Problem with calculating fireworks duration and it end sooner,
-                 * speed after boost might be faster because fw speed lim < actual speed lim without boosting.
-                 */
-                if (hDistance < lastMove.hAllowedDistance * 0.994) {
-                    thisMove.hAllowedDistance = lastMove.hAllowedDistance * 0.994;
-                    if (debug) debug(player, "Firework boost phase has ended sooner than expected, but the player is still legitimately boosting (hDist/Allowed): " + thisMove.hDistance + "/" + thisMove.hAllowedDistance);
-                    return new double[] {0.0, 0.0};
-                }
-                else allowedElytraHDistance += 0.2;
+                thisMove.yAllowedDistance = allowedElytraYDistance = 5.0;
+                thisMove.hAllowedDistance = allowedElytraHDistance = 5.0;
+                if(hDistance > 3.01) // 60m/s
+                    return new double[] {0.0, 1};
+                return new double[] {0.0, 0.0};
             }
 
             // Adjust false
@@ -757,11 +753,14 @@ public class CreativeFly extends Check {
                     }
                 }
 
-                if (yDistance > 0.0) {
+                thisMove.horizontalCounter = lastMove.horizontalCounter;
+
+                if (yDistance > 0.0) {/*
                     if (allowedElytraYDistance < yDistance && !isNear(allowedElytraYDistance, yDistance, 0.001)) {
                         tags.add("e_vasc");
                         resultV = yDistance;
-                    }
+                    }*/
+                    thisMove.horizontalCounter = 0;
                 } 
                 else if (yDistance < 0.0) {
                     if (allowedElytraYDistance > yDistance && !isNear(allowedElytraYDistance, yDistance, Magic.GRAVITY_MAX)) {
@@ -772,6 +771,9 @@ public class CreativeFly extends Check {
                 else {
                     // TODO: ....
                     //tags.add("e_vzero");
+                    if (lastMove.horizontalCounter >= 3)
+                        resultV = 1;
+                    thisMove.horizontalCounter++;
                 }
 
                 if (
@@ -785,7 +787,7 @@ public class CreativeFly extends Check {
                     allowedElytraYDistance = yDistance;
                 } 
                 // TODO: Better
-                else if (Math.abs(yDistDiffEx) > (speed < 0.05 ? 0.00001 : 0.03)) {
+                else if (allowedElytraYDistance < yDistance && thisMove.yAllowedDistance < yDistance && Math.abs(yDistDiffEx) > (speed < 0.05 ? 0.00001 : 0.03)) {
                     tags.add("e_vdiff");
                     //if (resultV <= 0.0 && yDistDiffEx > 0.0) {
                     //    Location newto = to.getLocation().clone().subtract(0.0, Math.max(yDistDiffEx, 0.5), 0.0);

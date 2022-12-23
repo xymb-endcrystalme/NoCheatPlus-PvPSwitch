@@ -794,12 +794,7 @@ public class MovingListener extends CheckListener implements TickListener, IRemo
         
         // 2: Proactive reset of elytraBoost (MC 1.11.2).
         if (data.fireworksBoostDuration > 0) {
-            if (!lastMove.valid 
-                || (cc.resetFwOnground && (lastMove.flyCheck != CheckType.MOVING_CREATIVEFLY || lastMove.modelFlying != thisMove.modelFlying))
-                || data.fireworksBoostTickExpire < tick) {
-                data.fireworksBoostDuration = 0;
-            }
-            else data.fireworksBoostDuration --;
+            data.fireworksBoostDuration --;
         }
         
         // 3: Set time resolutions and various counters.
@@ -1093,6 +1088,11 @@ public class MovingListener extends CheckListener implements TickListener, IRemo
         }
         // No fly checking :(.
         else data.clearFlyData();
+
+        if (checkCf)
+            data.howLongBeenFlying++;
+        else
+            data.howLongBeenFlying = 0;
 
         // 3: Morepackets.
         if (pData.isCheckActive(CheckType.MOVING_MOREPACKETS, player) && (newTo == null || data.isMorePacketsSetBackOldest())) {

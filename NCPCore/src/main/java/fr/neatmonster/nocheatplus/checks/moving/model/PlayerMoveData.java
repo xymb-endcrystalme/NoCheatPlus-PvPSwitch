@@ -88,6 +88,8 @@ public class PlayerMoveData extends MoveData {
      */
     public SimpleEntry verVelUsed = null;
 
+    public int horizontalCounter;
+
     @Override
     protected void resetBase() {
         // Properties of the player.

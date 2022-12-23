@@ -18,6 +18,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Boat;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -588,13 +589,14 @@ public class VehicleEnvelope extends Check {
         if (debug) {
             debugDetails.add("air-air");
         }
+        boolean boat_in_the_end = vehicle instanceof Boat && ((Boat)vehicle).getWorld().getEnvironment().equals(World.Environment.THE_END);
 
         if (checkDetails.canJump) {
             // TODO: Max. y-distance to set back.
             // TODO: Friction.
         }
         else {
-            if (thisMove.yDistance > 0.0) {
+            if (!boat_in_the_end && thisMove.yDistance > 0.0) {
                 tags.add("ascend_at_all");
                 return true;
             }
@@ -627,7 +629,7 @@ public class VehicleEnvelope extends Check {
             // TODO: What is this? Vehicle slide on honey block?
             if (ColliesHoneyBlock(from)) data.sfJumpPhase = 5;
 
-            if (!noViolation) {
+            if (!boat_in_the_end && !noViolation) {
                 tags.add("slow_fall_vdist");
                 violation = true;
             }
